@@ -97,4 +97,43 @@ export class Util {
     }
     return '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(index);
   }
+
+  checkSolved(solvedGrid: any[][]): boolean {
+    for (let row = 0; row < solvedGrid.length; row++) {
+      for (let col = 0; col < solvedGrid.length; col++) {
+        if (solvedGrid[row][col] === null) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  frequency2DArray(arr2D: any[][], item: any): number {
+    let freq = 0;
+    arr2D.forEach(arr => {
+      freq += this.frequencyArray(arr, item);
+    });
+    return freq;
+  }
+
+  frequencyArray(arr: any[], item: any): number {
+    return arr.filter(x => x === item).length;
+  }
+
+  getColumnCells(arr: any[][], col: number): any[] {
+    return arr.map(row => row[col]);
+  }
+
+  getCageCells(arr: any[][], cageArray: any[][], cage: number): any[] {
+    let cageCells = [];
+    for (let row = 0; row < cageArray.length; row++) {
+      for (let col = 0; col < cageArray.length; col++) {
+        if (cageArray[row][col] === cage) {
+          cageCells.push(arr[row][col]);
+        }
+      }
+    }
+    return cageCells;
+  }
 }

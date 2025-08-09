@@ -25,8 +25,7 @@ interface BoardSettings {
 })
 export class App implements AfterViewInit {
   constructor(public util: Util,
-              public solver: Solver) {
-  }
+              public solver: Solver) {}
 
   boardSettings: BoardSettings = {
     size: 9,
@@ -115,8 +114,8 @@ export class App implements AfterViewInit {
 
   clearCageBorders(): void {
     for (let row = 0; row < this.boardSettings.size; row++) {
-      for (let column = 0; column < this.boardSettings.size; column++) {
-        let cell = document.getElementById('tile' + row + '-' + column);
+      for (let col = 0; col < this.boardSettings.size; col++) {
+        let cell = document.getElementById('tile' + row + '-' + col);
         if (cell === null) {
           continue;
         }
@@ -140,8 +139,8 @@ export class App implements AfterViewInit {
   drawCageBorders(): void {
     this.clearCageBorders();
     for (let row = 0; row < this.boardSettings.size; row++) {
-      for (let column = 0; column < this.boardSettings.size; column++) {
-        let cell = document.getElementById('tile' + row + '-' + column);
+      for (let col = 0; col < this.boardSettings.size; col++) {
+        let cell = document.getElementById('tile' + row + '-' + col);
         if (cell === null) {
           continue;
         }
@@ -153,7 +152,7 @@ export class App implements AfterViewInit {
         if (row === 0) {
           cell.classList.add('cageTopEdgeOfBoard');
           cellHeight -= 3;
-        } else if (this.cageGroupingsArray[row][column] !== this.cageGroupingsArray[row - 1][column]) {
+        } else if (this.cageGroupingsArray[row][col] !== this.cageGroupingsArray[row - 1][col]) {
           cell.classList.add('cageTop');
           cellHeight -= 1;
         }
@@ -162,25 +161,25 @@ export class App implements AfterViewInit {
         if (row === this.boardSettings.size - 1) {
           cell.classList.add('cageBottomEdgeOfBoard');
           cellHeight -= 3;
-        } else if (this.cageGroupingsArray[row][column] !== this.cageGroupingsArray[row + 1][column]) {
+        } else if (this.cageGroupingsArray[row][col] !== this.cageGroupingsArray[row + 1][col]) {
           cell.classList.add('cageBottom');
           cellHeight -= 1;
         }
 
         // Check left border
-        if (column === 0) {
+        if (col === 0) {
           cell.classList.add('cageLeftEdgeOfBoard');
           cellWidth -= 3;
-        } else if (this.cageGroupingsArray[row][column] !== this.cageGroupingsArray[row][column - 1]) {
+        } else if (this.cageGroupingsArray[row][col] !== this.cageGroupingsArray[row][col - 1]) {
           cell.classList.add('cageLeft');
           cellWidth -= 1;
         }
 
         // Check right border
-        if (column === this.boardSettings.size - 1) {
+        if (col === this.boardSettings.size - 1) {
           cell.classList.add('cageRightEdgeOfBoard');
           cellWidth -= 3;
-        } else if (this.cageGroupingsArray[row][column] !== this.cageGroupingsArray[row][column + 1]) {
+        } else if (this.cageGroupingsArray[row][col] !== this.cageGroupingsArray[row][col + 1]) {
           cell.classList.add('cageRight');
           cellWidth -= 1;
         }
@@ -194,28 +193,20 @@ export class App implements AfterViewInit {
   checkCageErrors(): void {
     this.cageErrorMessage = '';
     // Check that all cages are filled
-    this.cageGroupingsArray.forEach(row => {
-      row.forEach((cell) => {
-        if (cell === null) {
-          this.cageErrorMessage = 'Uh oh! All cells need to be assigned a cage.'
-          return;
-        }
-      });
-    });
+    if (this.cageGroupingsArray.flatMap(row => row).filter(val => val === null).length > 0) {
+      this.cageErrorMessage = 'Uh oh! All cells need to be assigned a cage.'
+      return;
+    }
+
     // Check that each cage has same count = boardSettings.size
-    const frequency = (arr: any[][], item: any) => {
-      let freq = 0;
-      for (let i = 0; i < arr.length; i++) {
-        freq += arr[i].filter(x => x === item).length;
-      }
-      return freq;
-    };
+
     for (let index = 0; index < this.boardSettings.size; index++) {
-      if (frequency(this.cageGroupingsArray, index) !== this.boardSettings.size) {
+      if (this.util.frequency2DArray(this.cageGroupingsArray, index) !== this.boardSettings.size) {
         this.cageErrorMessage = 'Uh oh! All cages must be exactly ' + this.boardSettings.size + ' cells.';
         return;
       }
     }
+
     // Check that cages have no islands
     for (let index = 0; index < this.boardSettings.size; index++) {
       if (this.util.moreThanOneIsland(this.cageGroupingsArray, index)) {
@@ -227,38 +218,38 @@ export class App implements AfterViewInit {
     return;
   }
 
-  getCellValue(row: number, column: number): string {
+  getCellValue(row: number, col: number): string {
     let value: any = null;
     if (this.editMode === 'cageEdit') {
-      if (this.cageGroupingsArray.length > row && this.cageGroupingsArray[row].length > column) {
-        value = this.cageGroupingsArray[row][column];
+      if (this.cageGroupingsArray.length > row && this.cageGroupingsArray[row].length > col) {
+        value = this.cageGroupingsArray[row][col];
       }
     } else if (this.editMode === 'cellEdit') {
-      if (this.initialGridArray.length > row && this.initialGridArray[row].length > column) {
-        value = this.initialGridArray[row][column];
+      if (this.initialGridArray.length > row && this.initialGridArray[row].length > col) {
+        value = this.initialGridArray[row][col];
       }
     } else {
-      if (this.solvedGridArray.length > row && this.solvedGridArray[row].length > column) {
-        value = this.solvedGridArray[row][column];
+      if (this.solvedGridArray.length > row && this.solvedGridArray[row].length > col) {
+        value = this.solvedGridArray[row][col];
       }
     }
     return this.util.getTileValue(value);
   }
 
-  getCellColor(row: number, column: number): string {
+  getCellColor(row: number, col: number): string {
     if (this.editMode !== 'cageEdit') {
       return '#FFFFFFFF';
     }
 
-    return this.getCageColor(this.cageGroupingsArray[row][column]);
+    return this.getCageColor(this.cageGroupingsArray[row][col]);
   }
 
-  getTextColor(row: number, column: number): string {
+  getTextColor(row: number, col: number): string {
     if (this.editMode !== 'solved') {
       return '#000000FF';
     }
 
-    if (this.initialGridArray[row][column] !== null) {
+    if (this.initialGridArray[row][col] !== null) {
       // Initial values show black
       return '#000000FF';
     } else {
@@ -307,21 +298,21 @@ export class App implements AfterViewInit {
     }
   }
 
-  setCellValue(row: number, column: number): void {
+  setCellValue(row: number, col: number): void {
     if (this.editMode === 'cageEdit') {
-      if (this.cageGroupingsArray.length > row && this.cageGroupingsArray[row].length > column) {
-        this.cageGroupingsArray[row][column] = this.selectedValue;
+      if (this.cageGroupingsArray.length > row && this.cageGroupingsArray[row].length > col) {
+        this.cageGroupingsArray[row][col] = this.selectedValue;
         this.drawCageBorders();
         this.checkCageErrors();
       }
     } else if (this.editMode === 'cellEdit') {
-      if (this.initialGridArray.length > row && this.initialGridArray[row].length > column) {
-        this.initialGridArray[row][column] = this.selectedValue;
+      if (this.initialGridArray.length > row && this.initialGridArray[row].length > col) {
+        this.initialGridArray[row][col] = this.selectedValue;
         // this.highlightConflicting();
       }
     } else {
-      if (this.solvedGridArray.length > row && this.solvedGridArray[row].length > column) {
-        this.solvedGridArray[row][column] = this.selectedValue;
+      if (this.solvedGridArray.length > row && this.solvedGridArray[row].length > col) {
+        this.solvedGridArray[row][col] = this.selectedValue;
       }
     }
   }
@@ -353,7 +344,7 @@ export class App implements AfterViewInit {
     this.solvedGridArray = this.solver.solveGrid(this.initialGridArray, this.cageGroupingsArray, this.gameRules);
 
     this.editMode = 'solved';
-    if (this.solver.checkSolved(this.solvedGridArray)) {
+    if (this.util.checkSolved(this.solvedGridArray)) {
       this.solveButtonText = 'Solved';
     } else {
       this.solveButtonText = 'Unsolvable!';
