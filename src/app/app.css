@@ -1,0 +1,157 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+hr {
+  width: 500px;
+}
+
+.board {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.boardTile {
+  width: 48px;
+  height: 48px;
+  border: 1px solid black;
+
+  /* Text */
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cageBottomEdgeOfBoard {
+  border-bottom: 4px solid black;
+}
+
+.cageTopEdgeOfBoard {
+  border-top: 4px solid black;
+}
+
+.cageLeftEdgeOfBoard {
+  border-left: 4px solid black;
+}
+
+.cageRightEdgeOfBoard {
+  border-right: 4px solid black;
+}
+
+.cageBottom {
+  border-bottom: 2px solid black;
+}
+
+.cageTop {
+  border-top: 2px solid black;
+}
+
+.cageLeft {
+  border-left: 2px solid black;
+}
+
+.cageRight {
+  border-right: 2px solid black;
+}
+
+.inputBar {
+  width: 450px;
+  height: 50px;
+
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.inputTile {
+  width: 42px;
+  height: 42px;
+  border: 2px solid black;
+  margin: 2px;
+  border-radius: 5px;
+
+  /* Text */
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.number-selected {
+  background-color: gray;
+}
+
+.settings-group {
+  display: flex;
+  width: 500px;
+  margin: 0 auto;
+  gap: 10px;
+}
+
+.settings {
+  flex: 1;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.errorBox {
+  width: 300px;
+  margin: 5px auto;
+  border-radius: 5px;
+  padding: 5px;
+
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.errorColor {
+  border: 2px solid darkred;
+  background-color: indianred;
+}
+
+.mat-tooltip {
+  background-color: #333; /* Example: Dark background */
+  color: white; /* Example: White text */
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.solveRow {
+  display: flex;
+  margin: 5px auto;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  height: 50px;
+
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 5px;
+  border: 2px solid black;
+}
+
+.solve {
+  width: 120px;
+}
+
+.reset {
+  width: 80px;
+  background-color: indianred;
+}
